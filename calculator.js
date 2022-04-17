@@ -61,6 +61,7 @@ function evaluate(calcString) {
     while (operators.some(operator => operator === '/')) {
         for (let i = 0; i <= operators.length - 1; i++) {
             if (operators[i] === '/') {
+                if (numbers[i+1] === 0) return "Can't divide by zero!";
                 numbers.splice(i, 2, numbers[i] / numbers[i + 1]);
                 operators.splice(i, 1);
                 break;
