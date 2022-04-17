@@ -1,0 +1,57 @@
+.flex {
+    display: flex;
+}
+
+.colDir {
+    flex-direction: column;
+}
+
+#bodyContent {
+    align-items: center;
+}
+
+#calculator {
+    border: 3px solid black;
+    height: 600px;
+    width: 400px;
+    margin: 60px;
+    align-items: center;
+    background-color: lightgrey;
+}
+
+#screen {
+    border: 2px solid black;
+    height: 120px;
+    width: 350px;
+    margin: 20px;
+    background-color: greenyellow;
+    justify-content: right;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    font-size: xx-large;
+}
+
+#buttons {
+    border: 2px solid black;
+    width: 350px;
+    margin: 20px;
+    flex: 1;
+    background-color: rgb(176, 218, 245);
+}
+
+.buttonRow {
+    justify-content: center;
+    flex: 1;
+    margin: 5px;
+    gap: 5px;
+}
+
+.calcButton {
+    flex: 1;
+    font-size: x-large;
+}
+
+#button0 {
+    flex: 2.5 1 0;
+}
