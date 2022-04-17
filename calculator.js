@@ -1,32 +1,3 @@
-function calculatorAdd(a, b) {
-    return a + b;
-}
-
-function calculatorSubtract(a, b) {
-    return a - b;
-}
-
-function calculatorMultiply(a, b) {
-    return a * b;
-}
-
-function calculatorDivide(a, b) {
-    return a / b;
-}
-
-function operate(a, b, operator) {
-    switch (operator) {
-        case '+':
-            return calculatorAdd(a, b);
-        case '-':
-            return calculatorSubtract(a, b);
-        case '*':
-            return calculatorMultiply(a, b);
-        case '/':
-            return calculatorDivide(a, b);
-    }
-}
-
 const screen = document.querySelector('#screen');
 const textButtons = document.querySelectorAll('.textButton');
 const funcButtons = document.querySelectorAll('.funcButton');
@@ -34,6 +5,19 @@ const funcButtons = document.querySelectorAll('.funcButton');
 let showingAnswer = true;
 let answer = '';
 let operatorIndices = [];
+
+function operate(a, b, operator) {
+    switch (operator) {
+        case '+':
+            return a + b;
+        case '-':
+            return a - b;
+        case '*':
+            return a * b;
+        case '/':
+            return a / b;
+    }
+}
 
 function evaluate(calcString) {
     // before this stage need to remove any extra operators from the list making sure
@@ -62,7 +46,7 @@ function evaluate(calcString) {
         for (let i = 0; i <= operators.length - 1; i++) {
             if (operators[i] === '/') {
                 if (numbers[i+1] === 0) return "Can't divide by zero!";
-                numbers.splice(i, 2, numbers[i] / numbers[i + 1]);
+                numbers.splice(i, 2, operate(numbers[i], numbers[i + 1], '/'));
                 operators.splice(i, 1);
                 break;
             }
@@ -72,7 +56,7 @@ function evaluate(calcString) {
     while (operators.some(operator => operator === '*')) {
         for (let i = 0; i <= operators.length - 1; i++) {
             if (operators[i] === '*') {
-                numbers.splice(i, 2, numbers[i] * numbers[i + 1]);
+                numbers.splice(i, 2, operate(numbers[i], numbers[i + 1], '*'));
                 operators.splice(i, 1);
                 break;
             }
@@ -82,7 +66,7 @@ function evaluate(calcString) {
     while (operators.some(operator => operator === '+')) {
         for (let i = 0; i <= operators.length - 1; i++) {
             if (operators[i] === '+') {
-                numbers.splice(i, 2, numbers[i] + numbers[i + 1]);
+                numbers.splice(i, 2, operate(numbers[i], numbers[i + 1], '+'));
                 operators.splice(i, 1);
                 break;
             }
@@ -92,7 +76,7 @@ function evaluate(calcString) {
     while (operators.some(operator => operator === '-')) {
         for (let i = 0; i <= operators.length - 1; i++) {
             if (operators[i] === '-') {
-                numbers.splice(i, 2, numbers[i] - numbers[i + 1]);
+                numbers.splice(i, 2, operate(numbers[i], numbers[i + 1], '-'));
                 operators.splice(i, 1);
                 break;
             }
