@@ -32,11 +32,33 @@ const textButtons = document.querySelectorAll('.textButton');
 const funcButtons = document.querySelectorAll('.funcButton');
 
 let showingAnswer = true;
-let answer = ''
+let answer = '';
 let operatorIndices = [];
 
 function evaluate(calcString) {
+    // before this stage need to remove any extra operators from the list making sure
+    // each operator has two numbers
 
+    // parse the string into numbers and operators
+    let numbers = [];
+    let operators = [];
+
+    // evaluate divisions
+    for (let i = 0; i <= operatorIndices.length - 1; i++) {
+        operators.push(calcString.charAt(operatorIndices[i]));
+        // if it's the first operator or last operator 
+        // need to change the indices we're slicing from
+        if (i === 0) {
+            numbers.push(parseFloat(calcString.slice(0, operatorIndices[i])));
+        }
+        if (i === operatorIndices.length - 1) {
+            numbers.push(parseFloat(calcString.slice(operatorIndices[i] + 1)));
+        } else {
+            numbers.push(parseFloat(calcString.slice(operatorIndices[i] + 1, operatorIndices[i + 1])));
+        }
+    }
+    console.log(numbers);
+    console.log(operators);
 }
 
 textButtons.forEach(button => {
@@ -49,7 +71,6 @@ textButtons.forEach(button => {
             }
             screen.textContent += key;
             operatorIndices.push(screen.textContent.length - 1);
-            console.log(operatorIndices);
         });
     } else {
         button.addEventListener('click', () => {
@@ -73,7 +94,6 @@ funcButtons.forEach(button => {
                 } else {
                     if (operatorIndices.some(index => index === screen.textContent.length -1)) operatorIndices.pop();
                     screen.textContent = screen.textContent.slice(0, screen.textContent.length -1);
-                    console.log(operatorIndices);
                 }
             });
             break;
@@ -92,6 +112,13 @@ funcButtons.forEach(button => {
                     showingAnswer = false;
                 }
                 screen.textContent += answer;
+            });
+            break;
+        case '=':
+            button.addEventListener('click', () => {
+                if (!showingAnswer) {
+                    evaluate(screen.textContent);
+                }
             });
             break;
     }
