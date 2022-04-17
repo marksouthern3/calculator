@@ -42,8 +42,6 @@ function evaluate(calcString) {
     // parse the string into numbers and operators
     let numbers = [];
     let operators = [];
-
-    // evaluate divisions
     for (let i = 0; i <= operatorIndices.length - 1; i++) {
         operators.push(calcString.charAt(operatorIndices[i]));
         // if it's the first operator or last operator 
@@ -57,8 +55,49 @@ function evaluate(calcString) {
             numbers.push(parseFloat(calcString.slice(operatorIndices[i] + 1, operatorIndices[i + 1])));
         }
     }
-    console.log(numbers);
-    console.log(operators);
+
+    // iterate through the operations and evaluate them in bidmas order
+    // divisions
+    while (operators.some(operator => operator === '/')) {
+        for (let i = 0; i <= operators.length - 1; i++) {
+            if (operators[i] === '/') {
+                numbers.splice(i, 2, numbers[i] / numbers[i + 1]);
+                operators.splice(i, 1);
+                break;
+            }
+        }
+    }
+    // multiplications
+    while (operators.some(operator => operator === '*')) {
+        for (let i = 0; i <= operators.length - 1; i++) {
+            if (operators[i] === '*') {
+                numbers.splice(i, 2, numbers[i] * numbers[i + 1]);
+                operators.splice(i, 1);
+                break;
+            }
+        }
+    }
+    // additions
+    while (operators.some(operator => operator === '+')) {
+        for (let i = 0; i <= operators.length - 1; i++) {
+            if (operators[i] === '+') {
+                numbers.splice(i, 2, numbers[i] + numbers[i + 1]);
+                operators.splice(i, 1);
+                break;
+            }
+        }
+    }
+    // subtractions
+    while (operators.some(operator => operator === '-')) {
+        for (let i = 0; i <= operators.length - 1; i++) {
+            if (operators[i] === '-') {
+                numbers.splice(i, 2, numbers[i] - numbers[i + 1]);
+                operators.splice(i, 1);
+                break;
+            }
+        }
+    }
+    return numbers[0];
 }
 
 textButtons.forEach(button => {
@@ -117,7 +156,10 @@ funcButtons.forEach(button => {
         case '=':
             button.addEventListener('click', () => {
                 if (!showingAnswer) {
-                    evaluate(screen.textContent);
+                    answer = evaluate(screen.textContent);
+                    operatorIndices = [];
+                    screen.textContent = answer;
+                    showingAnswer = true;
                 }
             });
             break;
