@@ -55,3 +55,8 @@
 #button0 {
     flex: 2.5 1 0;
 }
+
+#buttonDEL,
+#buttonAC {
+    background-color: orange;
+}
