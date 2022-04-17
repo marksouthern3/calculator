@@ -5,6 +5,7 @@ const funcButtons = document.querySelectorAll('.funcButton');
 let showingAnswer = true;
 let answer = '';
 let operatorIndices = [];
+let displayText = '1.2332';
 
 function operate(a, b, operator) {
     switch (operator) {
@@ -85,24 +86,32 @@ function evaluate(calcString) {
     return numbers[0];
 }
 
+function setDisplayText(newString) {
+    screen.setAttribute('value', newString);
+}
+
+function getDisplayText() {
+    return screen.getAttribute('value');
+}
+
 textButtons.forEach(button => {
     const key = button.getAttribute('data-key');
     if (key === '+' || key === '-' || key === '/' || key === '*') {
         button.addEventListener('click', () => {
             if (showingAnswer) {
-                screen.textContent = '';
+                setDisplayText('');
                 showingAnswer = false;
             }
-            screen.textContent += key;
-            operatorIndices.push(screen.textContent.length - 1);
+            setDisplayText(getDisplayText() + key);
+            operatorIndices.push(getDisplayText().length - 1);
         });
     } else {
         button.addEventListener('click', () => {
             if (showingAnswer) {
-                screen.textContent = '';
+                setDisplayText('');
                 showingAnswer = false;
             }
-            screen.textContent += key;
+            setDisplayText(getDisplayText() + key);
         });
     }
 });
@@ -113,17 +122,17 @@ funcButtons.forEach(button => {
         case 'DEL':
             button.addEventListener('click', () => {
                 if (showingAnswer) {
-                    screen.textContent = '';
+                    setDisplayText('');
                     showingAnswer = false;                    
                 } else {
-                    if (operatorIndices.some(index => index === screen.textContent.length -1)) operatorIndices.pop();
-                    screen.textContent = screen.textContent.slice(0, screen.textContent.length -1);
+                    if (operatorIndices.some(index => index === getDisplayText().length -1)) operatorIndices.pop();
+                    setDisplayText(getDisplayText().slice(0, getDisplayText().length -1));
                 }
             });
             break;
         case 'AC':
             button.addEventListener('click', () => {
-                screen.textContent = '';
+                setDisplayText('');
                 answer = '';
                 operatorIndices = [];
                 showingAnswer = false;
@@ -132,18 +141,18 @@ funcButtons.forEach(button => {
         case 'ANS':
             button.addEventListener('click', () => {
                 if (showingAnswer) {
-                    screen.textContent = '';
+                    setDisplayText('');
                     showingAnswer = false;
                 }
-                screen.textContent += answer;
+                setDisplayText(getDisplayText() + answer);
             });
             break;
         case '=':
             button.addEventListener('click', () => {
                 if (!showingAnswer) {
-                    answer = evaluate(screen.textContent);
+                    answer = evaluate(getDisplayText());
                     operatorIndices = [];
-                    screen.textContent = answer;
+                    setDisplayText(answer);
                     showingAnswer = true;
                 }
             });
