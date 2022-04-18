@@ -4,8 +4,6 @@ const funcButtons = document.querySelectorAll('.funcButton');
 
 let showingAnswer = true;
 let answer = '';
-let operatorIndices = [];
-let displayText = '1.2332';
 
 function operate(a, b, operator) {
     switch (operator) {
@@ -23,6 +21,13 @@ function operate(a, b, operator) {
 function evaluate(calcString) {
     // before this stage need to remove any extra operators from the list making sure
     // each operator has two numbers
+
+    // identify the operators in the string 
+    let operatorIndices = [];
+    for (let i = 0; i <= calcString.length - 1; i++) {
+        let char = calcString.charAt(i);
+        if (char === '/' || char === '+' || char === '-' || char === '*') operatorIndices.push(i);
+    }
 
     // parse the string into numbers and operators
     let numbers = [];
@@ -87,33 +92,22 @@ function evaluate(calcString) {
 }
 
 function setDisplayText(newString) {
-    screen.setAttribute('value', newString);
+    screen.textContent = newString;
 }
 
 function getDisplayText() {
-    return screen.getAttribute('value');
+    return screen.textContent;
 }
 
 textButtons.forEach(button => {
     const key = button.getAttribute('data-key');
-    if (key === '+' || key === '-' || key === '/' || key === '*') {
-        button.addEventListener('click', () => {
-            if (showingAnswer) {
-                setDisplayText('');
-                showingAnswer = false;
-            }
-            setDisplayText(getDisplayText() + key);
-            operatorIndices.push(getDisplayText().length - 1);
-        });
-    } else {
-        button.addEventListener('click', () => {
-            if (showingAnswer) {
-                setDisplayText('');
-                showingAnswer = false;
-            }
-            setDisplayText(getDisplayText() + key);
-        });
-    }
+    button.addEventListener('click', () => {
+        if (showingAnswer) {
+            setDisplayText('');
+            showingAnswer = false;
+        }
+        setDisplayText(getDisplayText() + key);
+    });
 });
 
 funcButtons.forEach(button => {
@@ -125,7 +119,6 @@ funcButtons.forEach(button => {
                     setDisplayText('');
                     showingAnswer = false;                    
                 } else {
-                    if (operatorIndices.some(index => index === getDisplayText().length -1)) operatorIndices.pop();
                     setDisplayText(getDisplayText().slice(0, getDisplayText().length -1));
                 }
             });
@@ -134,7 +127,6 @@ funcButtons.forEach(button => {
             button.addEventListener('click', () => {
                 setDisplayText('');
                 answer = '';
-                operatorIndices = [];
                 showingAnswer = false;
             });
             break;
@@ -151,7 +143,6 @@ funcButtons.forEach(button => {
             button.addEventListener('click', () => {
                 if (!showingAnswer) {
                     answer = evaluate(getDisplayText());
-                    operatorIndices = [];
                     setDisplayText(answer);
                     showingAnswer = true;
                 }
