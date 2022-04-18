@@ -151,3 +151,41 @@ funcButtons.forEach(button => {
     }
 });
 
+// keyboard support
+const supportedTextKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.',
+                           '-', '+', '/', '*'];
+const supportedFuncKeys = ['=', 'Backspace', 'Enter', 'Escape'];
+window.addEventListener('keydown', event => {
+    console.log(event);
+    if (supportedTextKeys.includes(event.key)) {
+        if (showingAnswer) {
+            setDisplayText('');
+            showingAnswer = false;
+        }
+        setDisplayText(getDisplayText() + event.key);
+    } else if (supportedFuncKeys.includes(event.key)) {
+        switch (event.key) {
+            case 'Backspace': 
+                if (showingAnswer) {
+                    setDisplayText('');
+                    showingAnswer = false;                    
+                } else {
+                    setDisplayText(getDisplayText().slice(0, getDisplayText().length -1));
+                }
+                break;
+            case 'Escape':
+                setDisplayText('');
+                answer = '';
+                showingAnswer = false;
+                break;
+            case '=':
+            case 'Enter':
+                if (!showingAnswer) {
+                    answer = evaluate(getDisplayText());
+                    setDisplayText(answer);
+                    showingAnswer = true;
+                }
+                break;
+        }
+    }
+});
