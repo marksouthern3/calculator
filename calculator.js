@@ -18,10 +18,16 @@ function operate(a, b, operator) {
     }
 }
 
-function evaluate(calcString) {
-    // before this stage need to remove any extra operators from the list making sure
-    // each operator has two numbers
+// function to check how many times a certain char appears in a string
+function howManyChar(string, letter) {
+    let total = 0;
+    for (const s of string) {
+        if (s === letter) total++;
+    }
+    return total;
+}
 
+function evaluate(calcString) {
     // identify the operators in the string 
     let operatorIndices = [];
     for (let i = 0; i <= calcString.length - 1; i++) {
@@ -29,20 +35,38 @@ function evaluate(calcString) {
         if (char === '/' || char === '+' || char === '-' || char === '*') operatorIndices.push(i);
     }
 
+    /*// need to remove any extra operators from the list making sure each operator has two numbers
+    // parseFloat('+44.4') and parseFloat('-4.44') work as expected so can just remove operator index for these instances
+    for (let i = 0; i <= operatorIndices.length - 1; i++) {
+
+    }
+
+    // check first and last characters of the string to make sure they're not operators and deal with them if they are
+    if (operatorIndices[0] === 0) {
+        if (calcString.charAt(0) === '*' || calcString.charAt(0) === '/') return 'INVALID INPUT';
+        else operatorIndices.shift();
+    }
+    if (operatorIndices[-1] === calcString.length - 1) return 'INVALID INPUT';*/
+
     // parse the string into numbers and operators
     let numbers = [];
     let operators = [];
+    let numberString = null;
     for (let i = 0; i <= operatorIndices.length - 1; i++) {
         operators.push(calcString.charAt(operatorIndices[i]));
         // if it's the first operator or last operator 
         // need to change the indices we're slicing from
         if (i === 0) {
-            numbers.push(parseFloat(calcString.slice(0, operatorIndices[i])));
+            numberString = calcString.slice(0, operatorIndices[i]);
+            if (howManyChar(numberString, '.') > 1) return 'INVALID INPUT';
+            numbers.push(parseFloat(numberString));
         }
         if (i === operatorIndices.length - 1) {
-            numbers.push(parseFloat(calcString.slice(operatorIndices[i] + 1)));
+            numberString = calcString.slice(operatorIndices[i] + 1);
+            numbers.push(parseFloat(numberString));
         } else {
-            numbers.push(parseFloat(calcString.slice(operatorIndices[i] + 1, operatorIndices[i + 1])));
+            numberString = calcString.slice(operatorIndices[i] + 1, operatorIndices[i + 1]);
+            numbers.push(parseFloat(numberString));
         }
     }
 
