@@ -63,9 +63,11 @@ function evaluate(calcString) {
         }
         if (i === operatorIndices.length - 1) {
             numberString = calcString.slice(operatorIndices[i] + 1);
+            if (howManyChar(numberString, '.') > 1) return 'INVALID INPUT';
             numbers.push(parseFloat(numberString));
         } else {
             numberString = calcString.slice(operatorIndices[i] + 1, operatorIndices[i + 1]);
+            if (howManyChar(numberString, '.') > 1) return 'INVALID INPUT';
             numbers.push(parseFloat(numberString));
         }
     }
