@@ -27,6 +27,15 @@ function howManyChar(string, letter) {
     return total;
 }
 
+// find how many occurences of an element in an array
+function howManyElement(arr, element) {
+    let total = 0;
+    for (let i = 0; i <= arr.length - 1; i++) {
+        if (arr[i] === element) total++;
+    }
+    return total;
+}
+
 function evaluate(calcString) {
     // identify the operators in the string 
     let operatorIndices = [];
@@ -35,18 +44,30 @@ function evaluate(calcString) {
         if (char === '/' || char === '+' || char === '-' || char === '*') operatorIndices.push(i);
     }
 
-    /*// need to remove any extra operators from the list making sure each operator has two numbers
-    // parseFloat('+44.4') and parseFloat('-4.44') work as expected so can just remove operator index for these instances
+    // need to remove any extra operators from the list making sure each operator has two numbers
     for (let i = 0; i <= operatorIndices.length - 1; i++) {
-
+        let operatorChunk = [];
+        let operatorIndicesChunk = [];
+        operatorChunk.push(calcString.charAt(operatorIndices[i]));
+        operatorIndicesChunk.push(operatorIndices[i]);
+        let j = i;
+        while (operatorIndices[j + 1] === operatorIndices[j] + 1) {
+            operatorChunk.push(calcString.charAt(operatorIndices[j + 1]));
+            operatorIndicesChunk.push(operatorIndices[j + 1]);
+            j++;
+        }
+        if (operatorChunk.length > 1) {
+            // if the chunk is before the first number
+            if (operatorIndicesChunk[0] === 0) {
+                if (operatorChunk.includes('/') || operatorChunk.includes('*')) return 'INVALID INPUT';
+                if (howManyElement(operatorChunk, '-') % 2 === 0) {
+                    // cut chunk out of string
+                    // remove the operator index
+                    // shift all the operator indices so they reflect that the chunk has been removed
+                }
+            }
+        }
     }
-
-    // check first and last characters of the string to make sure they're not operators and deal with them if they are
-    if (operatorIndices[0] === 0) {
-        if (calcString.charAt(0) === '*' || calcString.charAt(0) === '/') return 'INVALID INPUT';
-        else operatorIndices.shift();
-    }
-    if (operatorIndices[-1] === calcString.length - 1) return 'INVALID INPUT';*/
 
     // parse the string into numbers and operators
     let numbers = [];
@@ -58,7 +79,7 @@ function evaluate(calcString) {
         // need to change the indices we're slicing from
         if (i === 0) {
             numberString = calcString.slice(0, operatorIndices[i]);
-            if (howManyChar(numberString, '.') > 1) return 'INVALID INPUT';
+            if (howManyChar(numberString, '.') > 1) return 'INVALID INPUT';  // check that there's not too many floating points
             numbers.push(parseFloat(numberString));
         }
         if (i === operatorIndices.length - 1) {
@@ -77,7 +98,7 @@ function evaluate(calcString) {
     while (operators.some(operator => operator === '/')) {
         for (let i = 0; i <= operators.length - 1; i++) {
             if (operators[i] === '/') {
-                if (numbers[i+1] === 0) return "Can't divide by zero!";
+                if (numbers[i+1] === 0) return "CAN'T DIVIDE BY ZERO!";
                 numbers.splice(i, 2, operate(numbers[i], numbers[i + 1], '/'));
                 operators.splice(i, 1);
                 break;
